@@ -1,0 +1,128 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPG1R3eTccsw3d65yEaIBG5",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Sharfa-Siddiqui12/PROBLEM1/blob/main/PROBLEM3\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "l0-L5V3QsQoZ",
+        "outputId": "1c806ceb-59c1-4ebc-b6f5-7240ae3e11ab"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Route exists between Kolkata and Pune\n",
+            "\n",
+            "Connected Components:\n",
+            "Component 1 : ['Kolkata', 'Mumbai', 'Pune', 'Delhi', 'Jaipur']\n",
+            "Component 2 : ['Chennai', 'Bangalore']\n",
+            "Component 3 : ['Hyderabad']\n"
+          ]
+        }
+      ],
+      "source": [
+        "graph = {\n",
+        "    \"Kolkata\": [\"Delhi\", \"Mumbai\"],\n",
+        "    \"Delhi\": [\"Kolkata\", \"Jaipur\"],\n",
+        "    \"Mumbai\": [\"Kolkata\", \"Pune\"],\n",
+        "    \"Jaipur\": [\"Delhi\"],\n",
+        "    \"Pune\": [\"Mumbai\"],\n",
+        "    \"Chennai\": [\"Bangalore\"],\n",
+        "    \"Bangalore\": [\"Chennai\"],\n",
+        "    \"Hyderabad\": []\n",
+        "}\n",
+        "\n",
+        "\n",
+        "def route_exists(graph, start, destination, visited=None):\n",
+        "    if visited is None:\n",
+        "        visited = set()\n",
+        "\n",
+        "    if start == destination:\n",
+        "        return True\n",
+        "\n",
+        "    visited.add(start)\n",
+        "\n",
+        "    for city in graph[start]:\n",
+        "        if city not in visited:\n",
+        "            if route_exists(graph, city, destination, visited):\n",
+        "                return True\n",
+        "\n",
+        "    return False\n",
+        "\n",
+        "\n",
+        "\n",
+        "def find_components(graph):\n",
+        "    visited = set()\n",
+        "    components = []\n",
+        "\n",
+        "    for city in graph:\n",
+        "        if city not in visited:\n",
+        "            component = []\n",
+        "            stack = [city]\n",
+        "\n",
+        "            while stack:\n",
+        "                current = stack.pop()\n",
+        "\n",
+        "                if current not in visited:\n",
+        "                    visited.add(current)\n",
+        "                    component.append(current)\n",
+        "\n",
+        "                    for neighbor in graph[current]:\n",
+        "                        if neighbor not in visited:\n",
+        "                            stack.append(neighbor)\n",
+        "\n",
+        "            components.append(component)\n",
+        "\n",
+        "    return components\n",
+        "\n",
+        "\n",
+        "\n",
+        "start = \"Kolkata\"\n",
+        "destination = \"Pune\"\n",
+        "\n",
+        "if route_exists(graph, start, destination):\n",
+        "    print(\"Route exists between\", start, \"and\", destination)\n",
+        "else:\n",
+        "    print(\"No route exists between\", start, \"and\", destination)\n",
+        "\n",
+        "\n",
+        "\n",
+        "components = find_components(graph)\n",
+        "\n",
+        "print(\"\\nConnected Components:\")\n",
+        "for i, component in enumerate(components, 1):\n",
+        "    print(\"Component\", i, \":\", component)"
+      ]
+    }
+  ]
+}
